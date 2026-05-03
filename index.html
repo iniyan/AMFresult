@@ -334,7 +334,16 @@ main{
 .vs-list{display:flex;flex-direction:column;gap:12px}
 .vs-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
 .vs-left{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
-.vs-lname{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.vs-lname{
+  font-size:12px;
+  font-weight:700;
+  color:var(--text);
+  white-space:normal;
+  overflow:visible;
+  text-overflow:unset;
+  max-width:none;
+}
+/*.vs-lname{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}*/
 .vs-tag{font-size:9px;font-weight:700;border-radius:4px;padding:2px 6px;flex-shrink:0;border:1px solid}
 .vs-pct{font-size:12px;font-weight:800;color:var(--accent);flex-shrink:0;margin-left:8px}
 .vs-track{height:7px;border-radius:7px;background:var(--surface3);overflow:hidden}
@@ -677,9 +686,9 @@ footer a:hover{text-decoration:underline}
       <div class="hist-box">
         <div class="hist-yr">2016 Election</div>
         <div class="hist-winner-name">Anbil Mahesh Poyyamozhi</div>
-        <div class="hist-party-chip" style="background:#fef2f2;border-color:#fca5a5;color:#991b1b">ADMK</div>
+        <div class="hist-party-chip" style="background:#fef2f2;border-color:#fca5a5;color:#991b1b">DMK</div>
         <div class="hist-votes-big" style="color:var(--muted)">—</div>
-        <div class="hist-detail">Ran under ADMK alliance<br>Won the seat</div>
+        <div class="hist-detail">Ran under DMK alliance<br>Won the seat</div>
       </div>
       <div class="hist-box active">
         <div class="hist-yr">2021 Election ★</div>
@@ -689,13 +698,13 @@ footer a:hover{text-decoration:underline}
         <div class="hist-detail">Won by 49,697 votes<br>53.5% vote share</div>
       </div>
     </div>
-    <div class="swing-box">
+    <!--<div class="swing-box">
       <span class="swing-icon">🔁</span>
       <div>
-        <div class="swing-title">Same candidate, different party allegiance</div>
-        <div class="swing-desc">Anbil Mahesh won in 2016 under the ADMK banner, then again in 2021 under DMK — demonstrating strong personal voter base that transcends party lines in Thiruverumbur.</div>
+        <div class="swing-title"></div>
+        <div class="swing-desc">DMK — demonstrating strong personal voter base that transcends party lines in Thiruverumbur.</div>
       </div>
-    </div>
+    </div>-->
   </div>
 
   <!-- Counting Rounds -->
