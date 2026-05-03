@@ -687,7 +687,7 @@ footer a:hover{text-decoration:underline}
         <div class="hist-yr">2016 Election</div>
         <div class="hist-winner-name">Anbil Mahesh Poyyamozhi</div>
         <div class="hist-party-chip" style="background:#fef2f2;border-color:#fca5a5;color:#991b1b">DMK</div>
-        <div class="hist-votes-big" style="color:var(--muted)">—</div>
+        <div class="hist-votes-big" style="color:var(--muted)"></div>
         <div class="hist-detail">Ran under DMK alliance<br>Won the seat</div>
       </div>
       <div class="hist-box active">
@@ -1143,7 +1143,8 @@ function buildCharts(list, total) {
       </div>`;
   }).join('');
 
-  const labels = top5.map(c=>c.name.split(' ').slice(-1)[0]);
+  const labels = top5.map(c => c.name);
+  //const labels = top5.map(c=>c.name.split(' ').slice(-1)[0]);
   if (barInst) barInst.destroy();
   barInst = new Chart(document.getElementById('barChart').getContext('2d'), {
     type:'bar',
