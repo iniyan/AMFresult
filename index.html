@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thiruverumbur AC 142 — Election Results 2026</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+/* ══════════════════════════════════════════
+   RESET & DESIGN TOKENS  (Light Theme)
+══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f6fb;
+  --bg2:#eef1f8;
+  --surface:#ffffff;
+  --surface2:#f8f9fc;
+  --surface3:#f0f3f8;
+  --border:#e2e8f0;
+  --border2:#cbd5e1;
+  --text:#1e293b;
+  --text2:#334155;
+  --muted:#64748b;
+  --muted2:#94a3b8;
+  --accent:#2563eb;
+  --accent2:#3b82f6;
+  --accent-bg:#eff6ff;
+  --gold:#d97706;
+  --gold-bg:#fffbeb;
+  --gold-border:#fde68a;
+  --silver:#64748b;
+  --bronze:#92400e;
+  --green:#16a34a;
+  --green-bg:#f0fdf4;
+  --green-border:#bbf7d0;
+  --red:#dc2626;
+  --dmk:#cc1111;
+  --aiadmk:#166534;
+  --ntk:#c2410c;
+  --mnm:#7c3aed;
+  --dmdk:#b45309;
+  --radius:16px;
+  --radius-sm:12px;
+  --radius-xs:8px;
+  --shadow:0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-gold:0 4px 20px rgba(217,119,6,0.15);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ══════════════════════════════════════════
+   CONFETTI CANVAS
+══════════════════════════════════════════ */
+#confettiCanvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:9999;
+}
+
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
+header{
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  padding:18px 16px 14px;
+  text-align:center;
+  box-shadow:var(--shadow-sm);
+  position:relative;z-index:10;
+}
+header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--dmk),var(--accent),var(--aiadmk));
+}
+.header-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--accent-bg);border:1px solid #bfdbfe;
+  border-radius:30px;padding:4px 14px;
+  font-size:11px;font-weight:700;letter-spacing:1px;
+  color:var(--accent);text-transform:uppercase;margin-bottom:10px;
+}
+.live-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 0 2px var(--green-border);
+  animation:livePulse 1.4s ease-in-out infinite;
+}
+.live-dot.offline{
+  background:var(--muted2);
+  box-shadow:0 0 0 2px var(--border);
+  animation:none;
+}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
+header h1{
+  font-size:clamp(18px,5vw,26px);font-weight:900;
+  color:var(--text);letter-spacing:-0.5px;margin-bottom:3px;
+}
+.header-sub{font-size:12px;color:var(--muted)}
+.header-sub strong{color:var(--accent)}
+.last-updated{font-size:11px;color:var(--muted2);margin-top:6px}
+#countdown{
+  display:inline-block;margin-top:8px;
+  background:var(--gold-bg);border:1px solid var(--gold-border);
+  border-radius:30px;padding:5px 16px;
+  font-size:12px;color:var(--gold);font-weight:700;
+}
+#countdown.live-now{
+  background:var(--green-bg);border-color:var(--green-border);
+  color:var(--green);
+}
+
+/* ══════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════ */
+main{
+  max-width:680px;margin:0 auto;
+  padding:16px 14px 28px;
+  display:flex;flex-direction:column;gap:14px;
+}
+
+/* ══════════════════════════════════════════
+   CARDS
+══════════════════════════════════════════ */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px 16px;
+  box-shadow:var(--shadow);
+}
+.card-label{
+  font-size:10px;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--muted);
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:6px;
+}
+
+/* ══════════════════════════════════════════
+   INFO BANNER
+══════════════════════════════════════════ */
+.info-banner{
+  background:var(--gold-bg);
+  border:1px solid var(--gold-border);
+  border-radius:var(--radius-sm);
+  padding:12px 16px;font-size:12px;
+  color:#92400e;text-align:center;line-height:1.6;
+}
+.info-banner strong{color:var(--gold)}
+
+/* ══════════════════════════════════════════
+   WINNER HERO
+══════════════════════════════════════════ */
+.winner-hero{
+  background:linear-gradient(135deg,#fffbeb 0%,#fff7ed 50%,#fef9c3 100%);
+  border:1.5px solid var(--gold-border);
+  border-radius:var(--radius);
+  padding:22px 18px 20px;
+  text-align:center;
+  box-shadow:var(--shadow-gold);
+  position:relative;overflow:hidden;
+}
+.winner-hero::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#f59e0b,#d97706,#b45309,#d97706,#f59e0b);
+  background-size:200% 100%;
+  animation:shimmerBar 2s linear infinite;
+}
+@keyframes shimmerBar{0%{background-position:0% 0%}100%{background-position:200% 0%}}
+.winner-crown{font-size:38px;display:block;margin-bottom:6px;animation:crownBounce 2s ease-in-out infinite}
+@keyframes crownBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.winner-declared{
+  font-size:10px;font-weight:800;letter-spacing:2px;
+  text-transform:uppercase;color:var(--gold);margin-bottom:5px;
+}
+.winner-name{
+  font-size:clamp(17px,4.5vw,24px);font-weight:900;
+  color:var(--text);line-height:1.2;margin-bottom:6px;
+}
+.winner-party-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  border-radius:30px;padding:4px 14px;
+  font-size:12px;font-weight:700;margin-bottom:14px;
+  border:1.5px solid;
+}
+.winner-stats-row{
+  display:flex;justify-content:center;align-items:center;gap:0;
+  background:#fff;border:1px solid var(--gold-border);
+  border-radius:var(--radius-sm);overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.winner-stat{flex:1;padding:12px 8px;text-align:center}
+.winner-stat + .winner-stat{border-left:1px solid var(--gold-border)}
+.winner-stat-val{
+  font-size:clamp(20px,5.5vw,28px);font-weight:900;
+  color:var(--gold);font-variant-numeric:tabular-nums;line-height:1;
+}
+.winner-stat-label{font-size:9px;color:var(--muted);margin-top:3px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+.margin-won-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--green-bg);border:1.5px solid var(--green-border);
+  border-radius:30px;padding:5px 16px;
+  font-size:11px;font-weight:700;color:var(--green);
+  margin-top:12px;
+}
+
+/* ══════════════════════════════════════════
+   PODIUM — TOP 3
+══════════════════════════════════════════ */
+.podium-wrap{
+  display:flex;
+  flex-direction:row;
+  gap:10px;
+  align-items:flex-end;   /* all cards sit on the same baseline */
+  min-height:260px;
+}
+.podium-card{
+  flex:1;
+  background:var(--surface2);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:14px 8px 12px;
+  text-align:center;
+  position:relative;overflow:hidden;
+  transition:box-shadow 0.2s ease;
+  display:flex;flex-direction:column;align-items:center;
+}
+/* Podium step heights — tallest card = 1st, shorter = 2nd, shortest = 3rd */
+.podium-card.p1{
+  min-height:260px;
+  background:linear-gradient(160deg,#fffbeb 0%,#fff 100%);
+  border-color:var(--gold-border);
+  box-shadow:var(--shadow-gold);
+}
+.podium-card.p2{
+  min-height:210px;
+  border-color:#e2e8f0;background:#f8faff;
+}
+.podium-card.p3{
+  min-height:170px;
+  border-color:#e7e0d8;background:#fdf8f4;
+}
+/* top accent line */
+.podium-accent{position:absolute;top:0;left:0;right:0;height:3px;border-radius:2px 2px 0 0}
+.p1 .podium-accent{background:linear-gradient(90deg,#f59e0b,#d97706)}
+.p2 .podium-accent{background:linear-gradient(90deg,#94a3b8,#64748b)}
+.p3 .podium-accent{background:linear-gradient(90deg,#cd7c3f,#92400e)}
+
+/* rank number badge (plain, no emoji) */
+.podium-rank{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 8px;
+  font-size:13px;font-weight:900;
+}
+.p1 .podium-rank{background:var(--gold-bg);border:2px solid #f59e0b;color:var(--gold)}
+.p2 .podium-rank{background:#f1f5f9;border:2px solid #94a3b8;color:var(--silver)}
+.p3 .podium-rank{background:#fdf8f4;border:2px solid #cd7c3f;color:var(--bronze)}
+
+.podium-cname{
+  font-size:clamp(10px,2.6vw,12px);font-weight:700;
+  color:var(--text);line-height:1.3;margin-bottom:2px;
+}
+.podium-dot{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  margin-right:3px;vertical-align:middle;flex-shrink:0;
+}
+.podium-party{
+  font-size:10px;color:var(--muted);margin-bottom:8px;
+  font-weight:600;letter-spacing:0.3px;
+}
+.podium-votes{
+  font-size:clamp(17px,4.2vw,22px);font-weight:900;
+  font-variant-numeric:tabular-nums;line-height:1;color:var(--text);
+}
+.p1 .podium-votes{color:var(--gold)}
+.podium-pct{
+  font-size:11px;font-weight:700;color:var(--accent);margin-top:3px;
+}
+.leading-pill{
+  display:inline-flex;align-items:center;gap:3px;
+  background:var(--green-bg);border:1.5px solid var(--green-border);
+  border-radius:20px;padding:3px 8px;
+  font-size:9px;font-weight:800;color:var(--green);
+  margin-top:6px;
+}
+
+/* ══════════════════════════════════════════
+   MARGIN CARD
+══════════════════════════════════════════ */
+.margin-row{display:flex;align-items:center;gap:14px}
+.margin-num{
+  font-size:clamp(32px,9vw,50px);font-weight:900;
+  color:var(--green);font-variant-numeric:tabular-nums;line-height:1;
+  white-space:nowrap;
+}
+.margin-right{flex:1;min-width:0}
+.margin-sub{font-size:11px;color:var(--muted);margin-bottom:8px}
+.margin-vs{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;margin-bottom:6px}
+.duel-bar{height:10px;border-radius:10px;overflow:hidden;display:flex;background:var(--surface3)}
+.duel-seg{height:100%;transition:flex 1.5s cubic-bezier(0.4,0,0.2,1)}
+.duel-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--muted2);margin-top:4px}
+
+/* ══════════════════════════════════════════
+   STATS GRID
+══════════════════════════════════════════ */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-box{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:14px 12px;text-align:center;
+}
+.stat-box.full{grid-column:1/-1}
+.stat-val{
+  font-size:clamp(20px,5.5vw,28px);font-weight:900;
+  color:var(--accent);font-variant-numeric:tabular-nums;
+}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:3px;font-weight:600;letter-spacing:0.3px}
+.turnout-track{height:8px;border-radius:8px;background:var(--border);margin-top:8px;overflow:hidden}
+.turnout-fill{
+  height:100%;border-radius:8px;
+  background:linear-gradient(90deg,var(--accent2),var(--green));
+  transition:width 1.5s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ══════════════════════════════════════════
+   VOTE SHARE BARS
+══════════════════════════════════════════ */
+.vs-list{display:flex;flex-direction:column;gap:12px}
+.vs-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.vs-left{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
+.vs-lname{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.vs-tag{font-size:9px;font-weight:700;border-radius:4px;padding:2px 6px;flex-shrink:0;border:1px solid}
+.vs-pct{font-size:12px;font-weight:800;color:var(--accent);flex-shrink:0;margin-left:8px}
+.vs-track{height:7px;border-radius:7px;background:var(--surface3);overflow:hidden}
+.vs-fill{height:100%;border-radius:7px;transition:width 1.5s cubic-bezier(0.4,0,0.2,1)}
+.vs-votes-txt{font-size:10px;color:var(--muted2);margin-top:3px}
+
+/* ══════════════════════════════════════════
+   CHARTS
+══════════════════════════════════════════ */
+.donut-wrap{position:relative;max-width:250px;margin:0 auto}
+.donut-center{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;pointer-events:none;
+}
+.dc-big{font-size:18px;font-weight:900;color:var(--text)}
+.dc-sm{font-size:9px;color:var(--muted);margin-top:1px;font-weight:600}
+.legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.leg-item{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text2)}
+.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.leg-pct{margin-left:auto;color:var(--muted);font-size:10px;font-weight:600}
+
+/* ══════════════════════════════════════════
+   HISTORICAL
+══════════════════════════════════════════ */
+.hist-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.hist-box{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:14px 12px;text-align:center;
+}
+.hist-box.active{border-color:#bfdbfe;background:var(--accent-bg)}
+.hist-yr{font-size:10px;font-weight:800;letter-spacing:1px;color:var(--muted);margin-bottom:8px;text-transform:uppercase}
+.hist-winner-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3}
+.hist-party-chip{
+  display:inline-block;font-size:9px;font-weight:700;
+  border-radius:4px;padding:2px 8px;border:1px solid;margin-bottom:6px;
+}
+.hist-votes-big{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums}
+.hist-detail{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+.swing-box{
+  display:flex;align-items:flex-start;gap:10px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:12px 14px;
+}
+.swing-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.swing-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+.swing-desc{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* ══════════════════════════════════════════
+   COUNTING ROUNDS
+══════════════════════════════════════════ */
+.rounds-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.rounds-progress-lbl{font-size:12px;color:var(--muted)}
+.rounds-progress-lbl strong{color:var(--text)}
+.rounds-legend{display:flex;gap:10px;font-size:10px;color:var(--muted)}
+.rl-sq{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:3px;vertical-align:middle}
+.rounds-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:5px;
+}
+.round-cell{
+  aspect-ratio:1;border-radius:var(--radius-xs);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:9px;font-weight:800;
+  border:1.5px solid var(--border);
+  background:var(--surface2);color:var(--muted2);
+  position:relative;cursor:default;
+  transition:transform 0.15s;
+}
+.round-cell:hover{transform:scale(1.1);z-index:2}
+.round-cell:hover .rtip{display:block}
+.round-cell.r-dmk{background:#fef2f2;border-color:#fca5a5;color:var(--dmk)}
+.round-cell.r-aiadmk{background:#f0fdf4;border-color:#86efac;color:var(--aiadmk)}
+.round-cell.r-pending{opacity:0.3}
+.rc-num{font-size:11px;font-weight:800;line-height:1}
+.rc-tag{font-size:7px;font-weight:700;opacity:0.8}
+.rtip{
+  display:none;position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);
+  background:var(--text);color:#fff;border-radius:6px;padding:4px 8px;
+  font-size:10px;white-space:nowrap;z-index:99;
+  box-shadow:var(--shadow);
+}
+.rtip::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:4px solid transparent;border-top-color:var(--text);
+}
+.rounds-summary{display:flex;gap:8px;margin-top:10px}
+.rsbox{
+  flex:1;background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius-xs);padding:10px 8px;text-align:center;
+}
+.rsbox-val{font-size:20px;font-weight:900;line-height:1}
+.rsbox-lbl{font-size:9px;color:var(--muted);margin-top:3px;font-weight:600;letter-spacing:0.2px}
+
+/* ══════════════════════════════════════════
+   CONSTITUENCY INFO
+══════════════════════════════════════════ */
+.chips-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:30px;padding:6px 14px;font-size:12px;
+}
+.chip-icon{font-size:13px}
+.chip-lbl{color:var(--muted);font-size:10px}
+.chip-val{font-weight:700;color:var(--text)}
+
+/* ══════════════════════════════════════════
+   MILESTONES / GAMIFICATION
+══════════════════════════════════════════ */
+.achieve-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+}
+.ach-card{
+  background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);padding:12px 8px;text-align:center;
+  transition:all 0.3s;position:relative;overflow:hidden;
+}
+.ach-card.on{
+  background:var(--gold-bg);border-color:var(--gold-border);
+  box-shadow:0 2px 12px rgba(217,119,6,0.12);
+}
+.ach-icon{font-size:24px;margin-bottom:5px;display:block;transition:transform 0.3s}
+.ach-card.on .ach-icon{animation:achPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both}
+@keyframes achPop{from{transform:scale(0.4)}to{transform:scale(1)}}
+.ach-card:not(.on) .ach-icon{filter:grayscale(1);opacity:0.3}
+.ach-name{font-size:10px;font-weight:700;color:var(--muted);line-height:1.3}
+.ach-card.on .ach-name{color:var(--gold)}
+.ach-tick{
+  position:absolute;top:5px;right:5px;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--gold);color:#fff;
+  font-size:8px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(0);transition:all 0.3s 0.1s;
+}
+.ach-card.on .ach-tick{opacity:1;transform:scale(1)}
+
+/* ══════════════════════════════════════════
+   REFRESH BUTTON
+══════════════════════════════════════════ */
+.refresh-row{display:flex;flex-direction:column;align-items:center;gap:6px}
+.refresh-btn{
+  display:flex;align-items:center;gap:7px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:30px;
+  padding:10px 24px;font-size:13px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+  box-shadow:0 2px 8px rgba(37,99,235,0.25);
+}
+.refresh-btn:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,0.35)}
+.refresh-btn:active{transform:translateY(0)}
+.refresh-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+.refresh-btn.spinning .spin-i{display:inline-block;animation:spinAnim 0.7s linear infinite}
+@keyframes spinAnim{to{transform:rotate(360deg)}}
+.next-refresh-lbl{font-size:11px;color:var(--muted2)}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--text);color:#fff;
+  border-radius:var(--radius-sm);padding:10px 22px;
+  font-size:13px;font-weight:600;
+  box-shadow:var(--shadow);z-index:9998;
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer{
+  text-align:center;padding:16px 16px 36px;
+  font-size:11px;color:var(--muted2);line-height:1.8;
+}
+footer a{color:var(--accent2);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* ══════════════════════════════════════════
+   FADE-IN ANIMATION
+══════════════════════════════════════════ */
+.fi{opacity:0;transform:translateY(18px);animation:fadeInUp 0.5s ease both}
+@keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media(min-width:500px){
+  .achieve-grid{grid-template-columns:repeat(6,1fr)}
+}
+@media(max-width:360px){
+  .winner-stats-row{flex-direction:column}
+  .winner-stat+.winner-stat{border-left:none;border-top:1px solid var(--gold-border)}
+  .margin-num{font-size:28px}
+}
+  </style>
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header>
+  <div class="header-badge">
+    <span class="live-dot" id="liveDot"></span>
+    <span id="liveLabel">2021 Reference</span>
+  </div>
+  <h1>Thiruverumbur Constituency</h1>
+  <p class="header-sub">Tamil Nadu Assembly Election &middot; AC <strong>142</strong> &middot; Tiruchirappalli District</p>
+  <div class="last-updated">Last updated: <span id="lastUpdated">—</span></div>
+  <div id="countdown">⏳ Calculating…</div>
+</header>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<main>
+
+  <!-- Pre-election notice -->
+  <div class="info-banner fi" id="preBanner" style="animation-delay:.0s">
+    📅 Displaying <strong>2021 Election Results</strong> as reference data.<br>
+    🔴 <strong>Live 2026 results</strong> will load automatically on <strong>4 May 2026, 8:00 AM IST</strong> — refreshes every 10 min.
+  </div>
+
+  <!-- Winner Hero -->
+  <div class="winner-hero fi" id="winnerHero" style="animation-delay:.06s">
+    <span class="winner-crown">👑</span>
+    <div class="winner-declared" id="winnerYearLbl">Winner · 2021</div>
+    <div class="winner-name" id="winnerName">Anbil Mahesh Poyyamozhi</div>
+    <div class="winner-party-badge" id="winnerPartyBadge">
+      <span class="podium-dot" id="winnerDot" style="background:var(--dmk)"></span>
+      <span id="winnerPartyTxt">DMK</span>
+    </div>
+    <div class="winner-stats-row" id="winnerStatsRow">
+      <div class="winner-stat">
+        <div class="winner-stat-val" id="wVotes">—</div>
+        <div class="winner-stat-label">Total Votes</div>
+      </div>
+      <div class="winner-stat">
+        <div class="winner-stat-val" id="wPct">—</div>
+        <div class="winner-stat-label">Vote Share</div>
+      </div>
+      <div class="winner-stat">
+        <div class="winner-stat-val" id="wMarginStat" style="color:var(--green)">—</div>
+        <div class="winner-stat-label">Winning Margin</div>
+      </div>
+    </div>
+    <div class="margin-won-badge" id="marginWonBadge">
+      ▲ Won by <span id="marginWonNum">49,697</span> votes
+    </div>
+  </div>
+
+  <!-- Top 3 Podium -->
+  <div class="card fi" style="animation-delay:.12s">
+    <div class="card-label">🏆 &nbsp;Top 3 Candidates</div>
+    <div class="podium-wrap" id="podiumWrap"></div>
+  </div>
+
+  <!-- Leading Margin -->
+  <div class="card fi" style="animation-delay:.18s">
+    <div class="card-label">📊 &nbsp;Leading Margin</div>
+    <div class="margin-row">
+      <div>
+        <div class="margin-num" id="marginNum">0</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">votes ahead</div>
+      </div>
+      <div class="margin-right">
+        <div class="margin-vs" id="marginVsRow"></div>
+        <div class="duel-bar">
+          <div class="duel-seg" id="duelSeg1"></div>
+          <div class="duel-seg" id="duelSeg2"></div>
+        </div>
+        <div class="duel-labels">
+          <span id="duelL1">—</span><span id="duelL2">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Votes -->
+  <div class="card fi" style="animation-delay:.24s">
+    <div class="card-label">🗳️ &nbsp;Total Votes</div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-val" id="svPolled">—</div>
+        <div class="stat-lbl">Votes Polled</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="svElectors">—</div>
+        <div class="stat-lbl">Registered Electors</div>
+      </div>
+      <div class="stat-box full">
+        <div class="stat-val" id="svTurnout" style="color:var(--green)">—</div>
+        <div class="stat-lbl">Voter Turnout</div>
+        <div class="turnout-track">
+          <div class="turnout-fill" id="turnoutFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="svCands" style="color:var(--gold)">11</div>
+        <div class="stat-lbl">Candidates</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="svStations" style="color:var(--gold)">414</div>
+        <div class="stat-lbl">Polling Stations</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vote Share -->
+  <div class="card fi" style="animation-delay:.30s">
+    <div class="card-label">📈 &nbsp;Vote Share — All Candidates</div>
+    <div class="vs-list" id="vsListEl"></div>
+  </div>
+
+  <!-- Donut Chart -->
+  <div class="card fi" style="animation-delay:.36s">
+    <div class="card-label">🥧 &nbsp;Vote Distribution</div>
+    <div class="donut-wrap">
+      <canvas id="donutChart" height="250"></canvas>
+      <div class="donut-center">
+        <div class="dc-big" id="dcBig">DMK</div>
+        <div class="dc-sm">Winner</div>
+      </div>
+    </div>
+    <div class="legend-grid" id="donutLegend"></div>
+  </div>
+
+  <!-- Bar Chart -->
+  <div class="card fi" style="animation-delay:.42s">
+    <div class="card-label">📉 &nbsp;Candidate Comparison</div>
+    <canvas id="barChart" height="200"></canvas>
+  </div>
+
+  <!-- Historical -->
+  <div class="card fi" style="animation-delay:.48s">
+    <div class="card-label">📜 &nbsp;Historical Results</div>
+    <div class="hist-grid">
+      <div class="hist-box">
+        <div class="hist-yr">2016 Election</div>
+        <div class="hist-winner-name">Anbil Mahesh Poyyamozhi</div>
+        <div class="hist-party-chip" style="background:#fef2f2;border-color:#fca5a5;color:#991b1b">ADMK</div>
+        <div class="hist-votes-big" style="color:var(--muted)">—</div>
+        <div class="hist-detail">Ran under ADMK alliance<br>Won the seat</div>
+      </div>
+      <div class="hist-box active">
+        <div class="hist-yr">2021 Election ★</div>
+        <div class="hist-winner-name">Anbil Mahesh Poyyamozhi</div>
+        <div class="hist-party-chip" style="background:#fef2f2;border-color:#fca5a5;color:#991b1b">DMK</div>
+        <div class="hist-votes-big" style="color:var(--accent)">1,05,424</div>
+        <div class="hist-detail">Won by 49,697 votes<br>53.5% vote share</div>
+      </div>
+    </div>
+    <div class="swing-box">
+      <span class="swing-icon">🔁</span>
+      <div>
+        <div class="swing-title">Same candidate, different party allegiance</div>
+        <div class="swing-desc">Anbil Mahesh won in 2016 under the ADMK banner, then again in 2021 under DMK — demonstrating strong personal voter base that transcends party lines in Thiruverumbur.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Counting Rounds -->
+  <div class="card fi" style="animation-delay:.54s">
+    <div class="card-label">🔄 &nbsp;Counting Rounds</div>
+    <div class="rounds-header">
+      <div class="rounds-progress-lbl">
+        Completed: <strong id="roundsDone">17</strong> / <strong id="roundsTotal">17</strong>
+      </div>
+      <div class="rounds-legend">
+        <span><span class="rl-sq" style="background:#fca5a5"></span>DMK</span>
+        <span><span class="rl-sq" style="background:#86efac"></span>AIADMK</span>
+      </div>
+    </div>
+    <div class="rounds-grid" id="roundsGrid"></div>
+    <div class="rounds-summary">
+      <div class="rsbox">
+        <div class="rsbox-val" id="rs-dmk" style="color:var(--dmk)">0</div>
+        <div class="rsbox-lbl">DMK Rounds</div>
+      </div>
+      <div class="rsbox">
+        <div class="rsbox-val" id="rs-aiadmk" style="color:var(--aiadmk)">0</div>
+        <div class="rsbox-lbl">AIADMK Rounds</div>
+      </div>
+      <div class="rsbox">
+        <div class="rsbox-val" id="rs-fin" style="color:var(--green)">0</div>
+        <div class="rsbox-lbl">Final Margin</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Constituency Profile -->
+  <div class="card fi" style="animation-delay:.60s">
+    <div class="card-label">📍 &nbsp;Constituency Profile</div>
+    <div class="chips-wrap">
+      <div class="chip"><span class="chip-icon">🗺️</span><span class="chip-lbl">District</span><span class="chip-val">Tiruchirappalli</span></div>
+      <div class="chip"><span class="chip-icon">🔢</span><span class="chip-lbl">AC No.</span><span class="chip-val">142</span></div>
+      <div class="chip"><span class="chip-icon">👥</span><span class="chip-lbl">Electors</span><span class="chip-val">2,93,003</span></div>
+      <div class="chip"><span class="chip-icon">🏛️</span><span class="chip-lbl">Stations</span><span class="chip-val">414</span></div>
+      <div class="chip"><span class="chip-icon">🗳️</span><span class="chip-lbl">Turnout</span><span class="chip-val">67.27%</span></div>
+      <div class="chip"><span class="chip-icon">📊</span><span class="chip-lbl">Rounds</span><span class="chip-val">17</span></div>
+      <div class="chip"><span class="chip-icon">🏆</span><span class="chip-lbl">2021 Margin</span><span class="chip-val">49,697</span></div>
+    </div>
+  </div>
+
+  <!-- Milestones -->
+  <div class="card fi" style="animation-delay:.66s">
+    <div class="card-label">🎖️ &nbsp;Milestones</div>
+    <div class="achieve-grid" id="achieveGrid"></div>
+  </div>
+
+  <!-- Refresh -->
+  <div class="refresh-row fi" style="animation-delay:.72s">
+    <button class="refresh-btn" id="refreshBtn" onclick="manualRefresh()">
+      <span class="spin-i">↻</span>&nbsp;Refresh Results
+    </button>
+    <span class="next-refresh-lbl" id="nextLbl"></span>
+  </div>
+
+</main>
+
+<footer>
+  Data: <a href="https://results.eci.gov.in/" target="_blank" rel="noopener">Election Commission of India</a>
+  &nbsp;·&nbsp; Auto-refreshes every 10 min on result day
+  &nbsp;·&nbsp; AC-142 Thiruverumbur, Tamil Nadu
+</footer>
+
+<div class="toast" id="toastEl"></div>
+
+<!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script>
+/* ─────────────────────────────────────────────────────────
+   ★ CONFIGURATION — UPDATE THIS WHEN ECI PUBLISHES URL ★
+   ─────────────────────────────────────────────────────────
+   On result day (4 May 2026), ECI will publish a URL like:
+     https://results.eci.gov.in/ResultAcGenMay2026/ConstituencywiseS22142.htm
+
+   S22  = Tamil Nadu state code
+   142  = Constituency number (Thiruverumbur)
+
+   If the URL pattern changes, update ECI_PATHS below.
+   Add the new URL as the FIRST item in the array.
+   ──────────────────────────────────────────────────────── */
+const ECI_PATHS = [
+  'ResultAcGenMay2026/ConstituencywiseS22142.htm',   // ← MOST LIKELY — update if needed
+  'ResultAcGen2026/ConstituencywiseS22142.htm',
+  'AcResultGenMay2026/ConstituencywiseS22142.htm',
+  'ResultAcGenNov2026/ConstituencywiseS22142.htm',
+];
+const ECI_BASE = 'https://results.eci.gov.in/';
+
+// CORS proxies — tried in order if first fails
+const PROXIES = [
+  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+  u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+];
+
+// Result day — 4 May 2026, 8:00 AM IST = 2:30 AM UTC
+const RESULT_DATE = new Date('2026-05-04T02:30:00Z');
+
+/* ─────────────────────────────────────────────────────────
+   2021 VERIFIED REFERENCE DATA
+   ──────────────────────────────────────────────────────── */
+const DATA_2021 = {
+  year: 2021,
+  totalElectors: 293003,
+  totalVotes: 197112,
+  turnout: 67.27,
+  numCandidates: 11,
+  numStations: 414,
+  totalRounds: 17,
+  // 'D' = DMK led that round, 'A' = AIADMK led
+  roundLeaders: ['A','A','D','D','D','D','D','D','D','D','D','D','D','D','D','D','D'],
+  // Approximate cumulative DMK margin after each round
+  roundMargins: [-1200,-800,800,3200,6100,9800,14200,19500,25300,31000,36800,40500,43800,46200,48100,49100,49697],
+  candidates: [
+    { name:'Anbil Mahesh Poyyamozhi', party:'DMK',    votes:105424, color:'#dc2626' },
+    { name:'P. Kumar',                party:'AIADMK', votes:55727,  color:'#16a34a' },
+    { name:'V. Cholasooran',          party:'NTK',    votes:15719,  color:'#c2410c' },
+    { name:'M. Muruganandam',         party:'MNM',    votes:14678,  color:'#7c3aed' },
+    { name:'S. Senthilkumar',         party:'DMDK',   votes:2293,   color:'#b45309' },
+    { name:'NOTA',                    party:'NOTA',   votes:1418,   color:'#64748b' },
+    { name:'Others (6)',              party:'IND',    votes:1853,   color:'#94a3b8' },
+  ]
+};
+
+/* ─────────────────────────────────────────────────────────
+   PARTY COLOR MAP
+   ──────────────────────────────────────────────────────── */
+const PARTY_COLORS = {
+  DMK:'#dc2626', AIADMK:'#16a34a', NTK:'#c2410c', MNM:'#7c3aed',
+  DMDK:'#b45309', INC:'#0369a1', BJP:'#ea580c', BSP:'#1d4ed8', NOTA:'#64748b',
+};
+function pColor(p) {
+  const k = (p||'').toUpperCase();
+  for (const key of Object.keys(PARTY_COLORS)) {
+    if (k.includes(key)) return PARTY_COLORS[key];
+  }
+  const h = Math.abs([...k].reduce((a,c)=>a+c.charCodeAt(0),0)) % 360;
+  return `hsl(${h},60%,40%)`;
+}
+
+/* ─────────────────────────────────────────────────────────
+   STATE
+   ──────────────────────────────────────────────────────── */
+let currentData = DATA_2021;
+let isLive = false;
+let donutInst = null, barInst = null;
+let nextRefreshAt = null;
+
+/* ─────────────────────────────────────────────────────────
+   UTILITIES
+   ──────────────────────────────────────────────────────── */
+function fmt(n) { return Math.round(n).toLocaleString('en-IN'); }
+
+function animNum(el, to, dur=1100) {
+  const from = parseFloat(el.dataset.rv || '0') || 0;
+  el.dataset.rv = to;
+  const t0 = performance.now();
+  (function tick(now) {
+    const p = Math.min((now-t0)/dur, 1);
+    const e = 1 - Math.pow(1-p, 4);
+    el.textContent = fmt(from + (to-from)*e);
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = fmt(to);
+  })(t0);
+}
+
+function toast(msg, dur=2800) {
+  const el = document.getElementById('toastEl');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), dur);
+}
+
+/* ─────────────────────────────────────────────────────────
+   CONFETTI
+   ──────────────────────────────────────────────────────── */
+function launchConfetti() {
+  const cv = document.getElementById('confettiCanvas');
+  const ctx = cv.getContext('2d');
+  cv.width  = window.innerWidth;
+  cv.height = window.innerHeight;
+  const cols = ['#dc2626','#f59e0b','#16a34a','#2563eb','#7c3aed','#f97316'];
+  const pieces = Array.from({length:130}, () => ({
+    x: Math.random() * cv.width,
+    y: Math.random() * cv.height - cv.height,
+    r: Math.random() * 7 + 3,
+    speed: Math.random() * 2.5 + 1,
+    tilt: 0, tiltInc: Math.random()*.07+.04,
+    color: cols[Math.floor(Math.random()*cols.length)],
+  }));
+  let tick = 0;
+  (function draw() {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    pieces.forEach(p => {
+      p.tilt += p.tiltInc; p.y += p.speed;
+      if (p.y > cv.height) { p.y = -10; p.x = Math.random()*cv.width; }
+      ctx.beginPath();
+      ctx.lineWidth = p.r;
+      ctx.strokeStyle = p.color;
+      ctx.moveTo(p.x + Math.sin(p.tilt)*15, p.y);
+      ctx.lineTo(p.x + Math.sin(p.tilt)*15 + p.r/2, p.y + p.r/2);
+      ctx.stroke();
+    });
+    if (++tick < 200) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+/* ─────────────────────────────────────────────────────────
+   COUNTDOWN
+   ──────────────────────────────────────────────────────── */
+function tickCountdown() {
+  const diff = RESULT_DATE - new Date();
+  const el   = document.getElementById('countdown');
+  if (diff <= 0) {
+    el.textContent = '🟢 Results are LIVE!';
+    el.classList.add('live-now');
+    return;
+  }
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor((diff%86400000)/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  el.textContent = `⏳ Live in: ${d}d ${h}h ${m}m ${s}s`;
+}
+
+/* ─────────────────────────────────────────────────────────
+   ECI SCRAPER
+   ──────────────────────────────────────────────────────── */
+async function fetchLive() {
+  for (const path of ECI_PATHS) {
+    const url = ECI_BASE + path;
+    for (const proxy of PROXIES) {
+      try {
+        const res = await fetch(proxy(url), { signal: AbortSignal.timeout(9000) });
+        if (!res.ok) continue;
+        const html = await res.text();
+        const parsed = parseECI(html);
+        if (parsed) return parsed;
+      } catch (_) {}
+    }
+  }
+  return null;
+}
+
+function parseECI(html) {
+  try {
+    const doc  = new DOMParser().parseFromString(html, 'text/html');
+    const rows = [...doc.querySelectorAll('table tr')];
+    const cands = [];
+    rows.forEach(row => {
+      const cells = [...row.querySelectorAll('td')];
+      if (cells.length < 4) return;
+      const name  = cells[1]?.textContent?.trim();
+      const party = cells[2]?.textContent?.trim();
+      const votes = parseInt((cells[3]?.textContent||'').replace(/\D/g,'')) || 0;
+      if (name && votes > 500) {
+        cands.push({ name, party, votes, color: pColor(party) });
+      }
+    });
+    if (cands.length < 2) return null;
+    cands.sort((a,b) => b.votes-a.votes);
+    const total = cands.reduce((s,c)=>s+c.votes,0);
+    if (total < 50000) return null;
+    return {
+      year:2026, totalElectors:310000, totalVotes:total,
+      turnout:null, numCandidates:cands.length, numStations:0,
+      totalRounds:17, roundLeaders:[], roundMargins:[],
+      candidates: cands,
+    };
+  } catch(_) { return null; }
+}
+
+/* ─────────────────────────────────────────────────────────
+   RENDER
+   ──────────────────────────────────────────────────────── */
+function renderAll(data) {
+  const list   = [...data.candidates].sort((a,b)=>b.votes-a.votes);
+  const total  = list.reduce((s,c)=>s+c.votes, 0);
+  const [p1,p2,p3] = list;
+  const margin = p1.votes - p2.votes;
+  const turnout = data.turnout || ((total/data.totalElectors)*100);
+
+  /* Winner Hero */
+  document.getElementById('winnerYearLbl').textContent = `Winner · ${data.year}`;
+  document.getElementById('winnerName').textContent    = p1.name;
+  document.getElementById('winnerPartyTxt').textContent = p1.party;
+  document.getElementById('winnerDot').style.background = p1.color;
+  const badge = document.getElementById('winnerPartyBadge');
+  badge.style.background   = p1.color+'18';
+  badge.style.borderColor  = p1.color+'55';
+  badge.style.color        = p1.color;
+  animNum(document.getElementById('wVotes'), p1.votes);
+  document.getElementById('wPct').textContent = ((p1.votes/total)*100).toFixed(1)+'%';
+  animNum(document.getElementById('wMarginStat'), margin);
+  document.getElementById('marginWonNum').textContent = fmt(margin);
+
+  /* Podium */
+  const order = [
+    {c:p2, cls:'p2', rank:2, rankLbl:'2nd'},
+    {c:p1, cls:'p1', rank:1, rankLbl:'1st'},
+    {c:p3, cls:'p3', rank:3, rankLbl:'3rd'},
+  ];
+  document.getElementById('podiumWrap').innerHTML = order.map(({c,cls,rank,rankLbl}) => {
+    if (!c) return '<div></div>';
+    const pct = ((c.votes/total)*100).toFixed(1);
+    const lp  = rank===1
+      ? `<div class="leading-pill">▲ +${fmt(margin)} votes</div>`
+      : '';
+    return `
+      <div class="podium-card ${cls}">
+        <div class="podium-accent"></div>
+        <div class="podium-rank">${rank}</div>
+        <div class="podium-cname">
+          <span class="podium-dot" style="background:${c.color}"></span>${c.name}
+        </div>
+        <div class="podium-party">${c.party}</div>
+        <div class="podium-votes" data-target="${c.votes}">0</div>
+        <div class="podium-pct">${pct}%</div>
+        ${lp}
+      </div>`;
+  }).join('');
+  document.querySelectorAll('.podium-votes').forEach(el =>
+    animNum(el, parseInt(el.dataset.target))
+  );
+
+  /* Margin */
+  animNum(document.getElementById('marginNum'), margin);
+  const p1pct = (p1.votes/total)*100, p2pct = (p2.votes/total)*100;
+  document.getElementById('marginVsRow').innerHTML = `
+    <span class="podium-dot" style="background:${p1.color}"></span>
+    <strong>${p1.party}</strong>
+    <span style="color:var(--muted2);font-size:10px;margin:0 2px">vs</span>
+    <span class="podium-dot" style="background:${p2.color}"></span>
+    <strong>${p2.party}</strong>`;
+  document.getElementById('duelSeg1').style.cssText = `background:${p1.color};flex:${p1pct}`;
+  document.getElementById('duelSeg2').style.cssText = `background:${p2.color};flex:${p2pct}`;
+  document.getElementById('duelL1').textContent = `${p1.party} ${p1pct.toFixed(1)}%`;
+  document.getElementById('duelL2').textContent = `${p2pct.toFixed(1)}% ${p2.party}`;
+
+  /* Stats */
+  animNum(document.getElementById('svPolled'),   total);
+  animNum(document.getElementById('svElectors'), data.totalElectors);
+  document.getElementById('svTurnout').textContent  = turnout.toFixed(2)+'%';
+  document.getElementById('svCands').textContent    = data.numCandidates || list.length;
+  document.getElementById('svStations').textContent = data.numStations || '414';
+  setTimeout(() => {
+    document.getElementById('turnoutFill').style.width = Math.min(turnout,100)+'%';
+  }, 150);
+
+  /* Vote share bars */
+  const vsl = document.getElementById('vsListEl');
+  vsl.innerHTML = list.map(c => {
+    const pct = ((c.votes/total)*100).toFixed(1);
+    return `
+      <div>
+        <div class="vs-top">
+          <div class="vs-left">
+            <span class="podium-dot" style="background:${c.color}"></span>
+            <span class="vs-lname">${c.name}</span>
+            <span class="vs-tag" style="background:${c.color}18;border-color:${c.color}44;color:${c.color}">${c.party}</span>
+          </div>
+          <span class="vs-pct">${pct}%</span>
+        </div>
+        <div class="vs-track">
+          <div class="vs-fill" style="width:0%;background:${c.color}" data-w="${pct}"></div>
+        </div>
+        <div class="vs-votes-txt">${fmt(c.votes)} votes</div>
+      </div>`;
+  }).join('');
+  requestAnimationFrame(() => setTimeout(() => {
+    vsl.querySelectorAll('.vs-fill').forEach(el => el.style.width = el.dataset.w+'%');
+  }, 80));
+
+  /* Charts */
+  buildCharts(list, total);
+
+  /* Rounds */
+  buildRounds(data);
+
+  /* Achievements */
+  buildAchievements(list, total, margin, turnout, data);
+
+  /* Timestamp */
+  document.getElementById('lastUpdated').textContent =
+    new Date().toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',second:'2-digit'}) + ' IST';
+}
+
+/* ─────────────────────────────────────────────────────────
+   CHARTS
+   ──────────────────────────────────────────────────────── */
+function buildCharts(list, total) {
+  const top5   = list.slice(0,5);
+  const votes  = top5.map(c=>c.votes);
+  const colors = top5.map(c=>c.color);
+
+  if (donutInst) donutInst.destroy();
+  donutInst = new Chart(document.getElementById('donutChart').getContext('2d'), {
+    type:'doughnut',
+    data:{
+      labels: top5.map(c=>c.name),
+      datasets:[{
+        data: votes,
+        backgroundColor: colors.map(c=>c+'cc'),
+        borderColor: colors,
+        borderWidth:2.5,
+        hoverOffset:10,
+      }]
+    },
+    options:{
+      cutout:'66%',
+      animation:{animateRotate:true,duration:1300,easing:'easeOutQuart'},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#1e293b',borderColor:'#334155',borderWidth:1,
+          callbacks:{label:ctx=>{
+            const pct = ((ctx.raw/total)*100).toFixed(1);
+            return ` ${ctx.label}: ${fmt(ctx.raw)} (${pct}%)`;
+          }}
+        }
+      }
+    }
+  });
+  document.getElementById('dcBig').textContent = list[0].party;
+  document.getElementById('donutLegend').innerHTML = top5.map(c => {
+    const pct = ((c.votes/total)*100).toFixed(1);
+    return `
+      <div class="leg-item">
+        <div class="leg-dot" style="background:${c.color}"></div>
+        <span>${c.name.split(' ').slice(0,2).join(' ')}</span>
+        <span class="leg-pct">${pct}%</span>
+      </div>`;
+  }).join('');
+
+  const labels = top5.map(c=>c.name.split(' ').slice(-1)[0]);
+  if (barInst) barInst.destroy();
+  barInst = new Chart(document.getElementById('barChart').getContext('2d'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[{
+        label:'Votes',
+        data: votes,
+        backgroundColor: colors.map(c=>c+'99'),
+        borderColor: colors,
+        borderWidth:2,
+        borderRadius:8,
+        borderSkipped:false,
+      }]
+    },
+    options:{
+      animation:{duration:1100,easing:'easeOutQuart'},
+      responsive:true,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#1e293b',borderColor:'#334155',borderWidth:1,
+          callbacks:{label:ctx=>` ${fmt(ctx.raw)} votes (${((ctx.raw/total)*100).toFixed(1)}%)`}
+        }
+      },
+      scales:{
+        x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:'#64748b',font:{size:11}}},
+        y:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{color:'#64748b',font:{size:10},
+          callback:v=>v>=1000?(v/1000).toFixed(0)+'K':v
+        }}
+      }
+    }
+  });
+}
+
+/* ─────────────────────────────────────────────────────────
+   COUNTING ROUNDS
+   ──────────────────────────────────────────────────────── */
+function buildRounds(data) {
+  const leaders = data.roundLeaders || [];
+  const margins = data.roundMargins || [];
+  const done    = leaders.filter(Boolean).length || data.totalRounds;
+  let dmk=0, aiadmk=0;
+
+  document.getElementById('roundsDone').textContent  = done;
+  document.getElementById('roundsTotal').textContent = data.totalRounds;
+
+  document.getElementById('roundsGrid').innerHTML =
+    Array.from({length:data.totalRounds}, (_,i) => {
+      const l = leaders[i];
+      if (l==='D') dmk++;
+      if (l==='A') aiadmk++;
+      const cls = l==='D' ? 'r-dmk' : l==='A' ? 'r-aiadmk' : 'r-pending';
+      const tag = l==='D' ? 'DMK'   : l==='A' ? 'AIADMK'   : '—';
+      const m   = margins[i];
+      const tip = m != null
+        ? `Rnd ${i+1}: ${tag} ${m>=0?'+':''}${fmt(m)}`
+        : `Round ${i+1}: Pending`;
+      return `
+        <div class="round-cell ${cls}">
+          <span class="rc-num">${i+1}</span>
+          <span class="rc-tag">${tag}</span>
+          <span class="rtip">${tip}</span>
+        </div>`;
+    }).join('');
+
+  document.getElementById('rs-dmk').textContent    = dmk;
+  document.getElementById('rs-aiadmk').textContent = aiadmk;
+  const fin = margins[margins.length-1] || 0;
+  document.getElementById('rs-fin').textContent    = fmt(Math.abs(fin));
+}
+
+/* ─────────────────────────────────────────────────────────
+   ACHIEVEMENTS
+   ──────────────────────────────────────────────────────── */
+function buildAchievements(list, total, margin, turnout, data) {
+  const p1=list[0], p2=list[1];
+  const achs = [
+    { icon:'🎯', name:'Result Declared',  on: data.roundLeaders.length===data.totalRounds },
+    { icon:'💯', name:'1 Lakh+ Votes',    on: p1.votes>=100000 },
+    { icon:'👑', name:'Landslide Win',    on: margin>40000 },
+    { icon:'📊', name:'67%+ Turnout',     on: turnout>=67 },
+    { icon:'🔥', name:'Top 2 > 1.5L',    on: p1.votes+p2.votes>150000 },
+    { icon:'⚡', name:'DMK Victory',      on: p1.party==='DMK' },
+  ];
+  document.getElementById('achieveGrid').innerHTML = achs.map(a=>`
+    <div class="ach-card ${a.on?'on':''}">
+      <span class="ach-icon">${a.icon}</span>
+      <div class="ach-name">${a.name}</div>
+      <div class="ach-tick">✓</div>
+    </div>`).join('');
+}
+
+/* ─────────────────────────────────────────────────────────
+   LIVE MODE TOGGLE
+   ──────────────────────────────────────────────────────── */
+function setLive(live) {
+  isLive = live;
+  const dot = document.getElementById('liveDot');
+  const lbl = document.getElementById('liveLabel');
+  if (live) {
+    dot.classList.remove('offline');
+    lbl.textContent = '🔴 Live 2026';
+    document.getElementById('preBanner').style.display = 'none';
+    launchConfetti();
+  } else {
+    dot.classList.add('offline');
+    lbl.textContent = '2021 Reference';
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   REFRESH LOGIC
+   ──────────────────────────────────────────────────────── */
+async function doRefresh() {
+  if (new Date() >= RESULT_DATE) {
+    // ── RESULT DAY: only show live ECI data, never fall back to 2021 ──
+    showFetching(true);
+    const live = await fetchLive();
+    showFetching(false);
+    if (live) {
+      currentData = live;
+      setLive(true);
+      renderAll(live);
+      toast('✅ Live 2026 results updated!');
+    } else {
+      // Still on result day but ECI page not yet up — show waiting state
+      showWaitingForResults();
+    }
+    return;
+  }
+  // ── Before result day: show 2021 reference data clearly labelled ──
+  currentData = DATA_2021;
+  setLive(false);
+  renderAll(DATA_2021);
+}
+
+function showFetching(on) {
+  const btn = document.getElementById('refreshBtn');
+  if (on) {
+    btn.classList.add('spinning');
+    btn.disabled = true;
+    document.getElementById('nextLbl').textContent = 'Fetching live results…';
+  } else {
+    btn.classList.remove('spinning');
+    btn.disabled = false;
+  }
+}
+
+function showWaitingForResults() {
+  // On result day but ECI data not yet available — show a clear waiting state
+  document.getElementById('preBanner').style.display = '';
+  document.getElementById('preBanner').innerHTML = `
+    ⏳ <strong>Counting has begun.</strong> Waiting for ECI to publish results…<br>
+    This page will <strong>auto-refresh every 10 minutes</strong> and update the moment data is live.
+  `;
+  document.getElementById('preBanner').style.background = '#eff6ff';
+  document.getElementById('preBanner').style.borderColor = '#bfdbfe';
+  document.getElementById('preBanner').style.color = '#1d4ed8';
+  document.getElementById('liveLabel').textContent = 'Waiting for ECI…';
+  document.getElementById('liveDot').classList.add('offline');
+  toast('⏳ ECI results not yet published — retrying in 10 min');
+}
+
+async function manualRefresh() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+  btn.disabled = true;
+  await doRefresh();
+  btn.classList.remove('spinning');
+  btn.disabled = false;
+  if (!isLive) toast('📌 Showing 2021 reference data — live on 4 May 2026');
+  scheduleNext();
+}
+
+function scheduleNext() {
+  nextRefreshAt = Date.now() + 10*60*1000;
+  setTimeout(() => { doRefresh(); scheduleNext(); }, 10*60*1000);
+  updateNextLbl();
+}
+
+function updateNextLbl() {
+  if (!nextRefreshAt) return;
+  const sec = Math.max(0, Math.ceil((nextRefreshAt - Date.now())/1000));
+  const lbl = document.getElementById('nextLbl');
+  lbl.textContent = sec > 60 ? `Next refresh in ${Math.ceil(sec/60)} min` : `Next in ${sec}s`;
+  setTimeout(updateNextLbl, 15000);
+}
+
+/* ─────────────────────────────────────────────────────────
+   INIT
+   ──────────────────────────────────────────────────────── */
+(async function init() {
+  tickCountdown();
+  setInterval(tickCountdown, 1000);
+  await doRefresh();
+  scheduleNext();
+})();
+</script>
+</body>
+</html>
