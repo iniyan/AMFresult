@@ -707,7 +707,7 @@ footer a:hover{text-decoration:underline}
     </div>-->
   </div>
 
-  <!-- Counting Rounds -->
+  <!-- Counting Rounds --
   <div class="card fi" style="animation-delay:.54s">
     <div class="card-label">🔄 &nbsp;Counting Rounds</div>
     <div class="rounds-header">
@@ -745,7 +745,7 @@ footer a:hover{text-decoration:underline}
       <div class="chip"><span class="chip-icon">👥</span><span class="chip-lbl">Electors</span><span class="chip-val">2,93,003</span></div>
       <div class="chip"><span class="chip-icon">🏛️</span><span class="chip-lbl">Stations</span><span class="chip-val">414</span></div>
       <div class="chip"><span class="chip-icon">🗳️</span><span class="chip-lbl">Turnout</span><span class="chip-val">67.27%</span></div>
-      <div class="chip"><span class="chip-icon">📊</span><span class="chip-lbl">Rounds</span><span class="chip-val">17</span></div>
+      <!--<div class="chip"><span class="chip-icon">📊</span><span class="chip-lbl">Rounds</span><span class="chip-val">17</span></div>-->
       <div class="chip"><span class="chip-icon">🏆</span><span class="chip-lbl">2021 Margin</span><span class="chip-val">49,697</span></div>
     </div>
   </div>
@@ -814,13 +814,13 @@ const DATA_2021 = {
   totalElectors: 293003,
   totalVotes: 197112,
   turnout: 67.27,
-  numCandidates: 11,
+  numCandidates: 15,
   numStations: 414,
-  totalRounds: 17,
+  //totalRounds: 17,
   // 'D' = DMK led that round, 'A' = AIADMK led
-  roundLeaders: ['A','A','D','D','D','D','D','D','D','D','D','D','D','D','D','D','D'],
+  //roundLeaders: ['A','A','D','D','D','D','D','D','D','D','D','D','D','D','D','D','D'],
   // Approximate cumulative DMK margin after each round
-  roundMargins: [-1200,-800,800,3200,6100,9800,14200,19500,25300,31000,36800,40500,43800,46200,48100,49100,49697],
+  //roundMargins: [-1200,-800,800,3200,6100,9800,14200,19500,25300,31000,36800,40500,43800,46200,48100,49100,49697],
   candidates: [
     { name:'Anbil Mahesh Poyyamozhi', party:'DMK',    votes:105424, color:'#dc2626' },
     { name:'P. Kumar',                party:'AIADMK', votes:55727,  color:'#16a34a' },
@@ -1182,7 +1182,7 @@ function buildCharts(list, total) {
 
 /* ─────────────────────────────────────────────────────────
    COUNTING ROUNDS
-   ──────────────────────────────────────────────────────── */
+   ──────────────────────────────────────────────────────── 
 function buildRounds(data) {
   const leaders = data.roundLeaders || [];
   const margins = data.roundMargins || [];
