@@ -532,6 +532,37 @@ footer a:hover{text-decoration:underline}
 @keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
 
 /* ══════════════════════════════════════════
+   WAITING / SKELETON STATE
+══════════════════════════════════════════ */
+.waiting-state .stat-val,
+.waiting-state .margin-num,
+.waiting-state .winner-stat-val{
+  color:var(--muted2) !important;
+  font-size:1.2em !important;
+}
+.skeleton-pulse{
+  display:inline-block;
+  background:linear-gradient(90deg,var(--border) 25%,var(--surface3) 50%,var(--border) 75%);
+  background-size:200% 100%;
+  animation:skeletonShimmer 1.5s ease-in-out infinite;
+  border-radius:6px;color:transparent !important;
+  min-width:60px;height:1em;vertical-align:middle;
+}
+@keyframes skeletonShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.waiting-banner{
+  background:#eff6ff;border:1px solid #bfdbfe;
+  border-radius:var(--radius-sm);
+  padding:14px 16px;text-align:center;
+  font-size:13px;color:#1d4ed8;line-height:1.7;
+}
+.waiting-banner strong{color:#1e40af}
+.waiting-pulse{
+  display:inline-block;width:10px;height:10px;border-radius:50%;
+  background:#3b82f6;margin-right:6px;vertical-align:middle;
+  animation:livePulse 1.2s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════════ */
 @media(min-width:500px){
@@ -592,8 +623,8 @@ footer a:hover{text-decoration:underline}
         <div class="winner-stat-label">Winning Margin</div>
       </div>
     </div>
-    <div class="margin-won-badge" id="marginWonBadge">
-      ▲ Won by <span id="marginWonNum">49,697</span> votes
+    <div class="margin-won-badge" id="marginWonBadge" style="display:none">
+      ▲ Won by <span id="marginWonNum">—</span> votes
     </div>
   </div>
 
@@ -644,11 +675,11 @@ footer a:hover{text-decoration:underline}
         </div>
       </div>
       <div class="stat-box">
-        <div class="stat-val" id="svCands" style="color:var(--gold)">11</div>
+        <div class="stat-val" id="svCands" style="color:var(--gold)">—</div>
         <div class="stat-lbl">Candidates</div>
       </div>
       <div class="stat-box">
-        <div class="stat-val" id="svStations" style="color:var(--gold)">414</div>
+        <div class="stat-val" id="svStations" style="color:var(--gold)">—</div>
         <div class="stat-lbl">Polling Stations</div>
       </div>
     </div>
@@ -666,7 +697,7 @@ footer a:hover{text-decoration:underline}
     <div class="donut-wrap">
       <canvas id="donutChart" height="250"></canvas>
       <div class="donut-center">
-        <div class="dc-big" id="dcBig">DMK</div>
+        <div class="dc-big" id="dcBig">—</div>
         <div class="dc-sm">Winner</div>
       </div>
     </div>
@@ -690,12 +721,19 @@ footer a:hover{text-decoration:underline}
         <div class="hist-votes-big" style="color:var(--muted)"></div>
         <div class="hist-detail">Ran under DMK alliance<br>Won the seat</div>
       </div>
-      <div class="hist-box active">
-        <div class="hist-yr">2021 Election ★</div>
+      <div class="hist-box" id="hist2026box" style="display:none">
+        <div class="hist-yr">2026 Election ★ LIVE</div>
+        <div class="hist-winner-name" id="hist2026winner">—</div>
+        <div class="hist-party-chip" id="hist2026chip" style="background:#fef2f2;border-color:#fca5a5;color:#991b1b">—</div>
+        <div class="hist-votes-big" id="hist2026votes" style="color:var(--accent)">—</div>
+        <div class="hist-detail" id="hist2026detail">Counting in progress…</div>
+      </div>
+      <div class="hist-box active" id="hist2021box">
+        <div class="hist-yr">2021 Election (Reference)</div>
         <div class="hist-winner-name">Anbil Mahesh Poyyamozhi</div>
         <div class="hist-party-chip" style="background:#fef2f2;border-color:#fca5a5;color:#991b1b">DMK</div>
-        <div class="hist-votes-big" style="color:var(--accent)">1,05,424</div>
-        <div class="hist-detail">Won by 49,697 votes<br>53.5% vote share</div>
+        <div class="hist-votes-big" style="color:var(--muted)">1,05,424</div>
+        <div class="hist-detail">Won by 49,697 votes · 53.5%</div>
       </div>
     </div>
     <!--<div class="swing-box">
@@ -742,11 +780,11 @@ footer a:hover{text-decoration:underline}
     <div class="chips-wrap">
       <div class="chip"><span class="chip-icon">🗺️</span><span class="chip-lbl">District</span><span class="chip-val">Tiruchirappalli</span></div>
       <div class="chip"><span class="chip-icon">🔢</span><span class="chip-lbl">AC No.</span><span class="chip-val">142</span></div>
-      <div class="chip"><span class="chip-icon">👥</span><span class="chip-lbl">Electors</span><span class="chip-val">2,93,003</span></div>
-      <div class="chip"><span class="chip-icon">🏛️</span><span class="chip-lbl">Stations</span><span class="chip-val">414</span></div>
-      <div class="chip"><span class="chip-icon">🗳️</span><span class="chip-lbl">Turnout</span><span class="chip-val">67.27%</span></div>
-      <!--<div class="chip"><span class="chip-icon">📊</span><span class="chip-lbl">Rounds</span><span class="chip-val">17</span></div>-->
-      <div class="chip"><span class="chip-icon">🏆</span><span class="chip-lbl">2021 Margin</span><span class="chip-val">49,697</span></div>
+      <div class="chip"><span class="chip-icon">👥</span><span class="chip-lbl">Electors</span><span class="chip-val" id="chipElectors">—</span></div>
+      <div class="chip"><span class="chip-icon">🏛️</span><span class="chip-lbl">Stations</span><span class="chip-val" id="chipStations">—</span></div>
+      <div class="chip"><span class="chip-icon">🗳️</span><span class="chip-lbl">Turnout</span><span class="chip-val" id="chipTurnout">—</span></div>
+      <div class="chip"><span class="chip-icon">📊</span><span class="chip-lbl">Rounds</span><span class="chip-val" id="chipRounds">—</span></div>
+      <div class="chip"><span class="chip-icon">🏆</span><span class="chip-lbl">Margin</span><span class="chip-val" id="chipMargin">—</span></div>
     </div>
   </div>
 
@@ -862,6 +900,7 @@ let nextRefreshAt = null;
 function fmt(n) { return Math.round(n).toLocaleString('en-IN'); }
 
 function animNum(el, to, dur=1100) {
+  if (!el || isNaN(to) || to === null || to === undefined) return;
   const from = parseFloat(el.dataset.rv || '0') || 0;
   el.dataset.rv = to;
   const t0 = performance.now();
@@ -1053,10 +1092,37 @@ function renderAll(data) {
   animNum(document.getElementById('svElectors'), data.totalElectors);
   document.getElementById('svTurnout').textContent  = turnout.toFixed(2)+'%';
   document.getElementById('svCands').textContent    = data.numCandidates || list.length;
-  document.getElementById('svStations').textContent = data.numStations || '414';
+  document.getElementById('svStations').textContent = data.numStations   || '—';
   setTimeout(() => {
     document.getElementById('turnoutFill').style.width = Math.min(turnout,100)+'%';
   }, 150);
+
+  /* Constituency chips — live values */
+  document.getElementById('chipElectors').textContent = fmt(data.totalElectors);
+  document.getElementById('chipStations').textContent = data.numStations || '—';
+  document.getElementById('chipTurnout').textContent  = turnout.toFixed(2)+'%';
+  document.getElementById('chipRounds').textContent   = data.totalRounds || '—';
+  document.getElementById('chipMargin').textContent   = fmt(margin);
+
+  /* History — show 2026 live box once data arrives */
+  if (data.year === 2026) {
+    document.getElementById('hist2026box').style.display  = '';
+    document.getElementById('hist2021box').classList.remove('active');
+    document.getElementById('hist2026winner').textContent = p1.name;
+    document.getElementById('hist2026chip').textContent   = p1.party;
+    document.getElementById('hist2026chip').style.background = p1.color+'18';
+    document.getElementById('hist2026chip').style.borderColor = p1.color+'55';
+    document.getElementById('hist2026chip').style.color       = p1.color;
+    document.getElementById('hist2026votes').textContent  = fmt(p1.votes);
+    document.getElementById('hist2026detail').textContent =
+      `Leading by ${fmt(margin)} votes · ${((p1.votes/total)*100).toFixed(1)}%`;
+  }
+
+  /* Margin won badge — only show when result is final/clear */
+  if (margin > 0) {
+    document.getElementById('marginWonBadge').style.display = '';
+    document.getElementById('marginWonNum').textContent = fmt(margin);
+  }
 
   /* Vote share bars */
   const vsl = document.getElementById('vsListEl');
@@ -1181,56 +1247,74 @@ function buildCharts(list, total) {
 }
 
 /* ─────────────────────────────────────────────────────────
-   COUNTING ROUNDS
-   ──────────────────────────────────────────────────────── 
+   COUNTING ROUNDS — populated only from live ECI data
+   ──────────────────────────────────────────────────────── */
 function buildRounds(data) {
   const leaders = data.roundLeaders || [];
   const margins = data.roundMargins || [];
-  const done    = leaders.filter(Boolean).length || data.totalRounds;
+  const total   = data.totalRounds  || 0;
+  const done    = leaders.filter(Boolean).length;
   let dmk=0, aiadmk=0;
 
-  document.getElementById('roundsDone').textContent  = done;
-  document.getElementById('roundsTotal').textContent = data.totalRounds;
+  const doneEl  = document.getElementById('roundsDone');
+  const totalEl = document.getElementById('roundsTotal');
+  if (doneEl)  doneEl.textContent  = done  || '—';
+  if (totalEl) totalEl.textContent = total || '—';
 
-  document.getElementById('roundsGrid').innerHTML =
-    Array.from({length:data.totalRounds}, (_,i) => {
-      const l = leaders[i];
-      if (l==='D') dmk++;
-      if (l==='A') aiadmk++;
-      const cls = l==='D' ? 'r-dmk' : l==='A' ? 'r-aiadmk' : 'r-pending';
-      const tag = l==='D' ? 'DMK'   : l==='A' ? 'AIADMK'   : '—';
-      const m   = margins[i];
-      const tip = m != null
-        ? `Rnd ${i+1}: ${tag} ${m>=0?'+':''}${fmt(m)}`
-        : `Round ${i+1}: Pending`;
-      return `
-        <div class="round-cell ${cls}">
-          <span class="rc-num">${i+1}</span>
-          <span class="rc-tag">${tag}</span>
-          <span class="rtip">${tip}</span>
-        </div>`;
-    }).join('');
+  const grid = document.getElementById('roundsGrid');
+  if (!grid) return;
 
-  document.getElementById('rs-dmk').textContent    = dmk;
-  document.getElementById('rs-aiadmk').textContent = aiadmk;
-  const fin = margins[margins.length-1] || 0;
-  document.getElementById('rs-fin').textContent    = fmt(Math.abs(fin));
+  if (total === 0) {
+    grid.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:8px 0">Round data not yet available</div>';
+    return;
+  }
+
+  grid.innerHTML = Array.from({length:total}, (_,i) => {
+    const l = leaders[i];
+    if (l==='D') dmk++;
+    if (l==='A') aiadmk++;
+    const cls = l==='D' ? 'r-dmk' : l==='A' ? 'r-aiadmk' : 'r-pending';
+    const tag = l==='D' ? 'DMK'   : l==='A' ? 'AIADMK'   : '—';
+    const m   = margins[i];
+    const tip = m != null
+      ? `Rnd ${i+1}: ${tag} ${m>=0?'+':''}${fmt(m)}`
+      : `Round ${i+1}: Pending`;
+    return `
+      <div class="round-cell ${cls}">
+        <span class="rc-num">${i+1}</span>
+        <span class="rc-tag">${tag}</span>
+        <span class="rtip">${tip}</span>
+      </div>`;
+  }).join('');
+
+  const dmkEl    = document.getElementById('rs-dmk');
+  const aiadmkEl = document.getElementById('rs-aiadmk');
+  const finEl    = document.getElementById('rs-fin');
+  if (dmkEl)    dmkEl.textContent    = dmk;
+  if (aiadmkEl) aiadmkEl.textContent = aiadmk;
+  if (finEl) {
+    const fin = margins[margins.length-1] || 0;
+    finEl.textContent = fin ? fmt(Math.abs(fin)) : '—';
+  }
 }
 
 /* ─────────────────────────────────────────────────────────
    ACHIEVEMENTS
    ──────────────────────────────────────────────────────── */
 function buildAchievements(list, total, margin, turnout, data) {
+  const grid = document.getElementById('achieveGrid');
+  if (!grid) return;
   const p1=list[0], p2=list[1];
+  const rl = data.roundLeaders || [];
   const achs = [
-    { icon:'🎯', name:'Result Declared',  on: data.roundLeaders.length===data.totalRounds },
-    { icon:'💯', name:'1 Lakh+ Votes',    on: p1.votes>=100000 },
-    { icon:'👑', name:'Landslide Win',    on: margin>40000 },
-    { icon:'📊', name:'67%+ Turnout',     on: turnout>=67 },
-    { icon:'🔥', name:'Top 2 > 1.5L',    on: p1.votes+p2.votes>150000 },
-    { icon:'⚡', name:'DMK Victory',      on: p1.party==='DMK' },
+    { icon:'🎯', name:'Result Declared',  on: rl.length > 0 && rl.length === (data.totalRounds||0) },
+    { icon:'💯', name:'1 Lakh+ Votes',    on: p1.votes >= 100000 },
+    { icon:'👑', name:'Landslide Win',    on: margin > 40000 },
+    { icon:'📊', name:'67%+ Turnout',     on: turnout >= 67 },
+    { icon:'🔥', name:'Top 2 > 1.5L',    on: p1.votes + p2.votes > 150000 },
+    { icon:'⚡', name:'DMK Leads',        on: p1.party === 'DMK' },
   ];
-  document.getElementById('achieveGrid').innerHTML = achs.map(a=>`
+  grid.innerHTML = achs.map(a=>`
     <div class="ach-card ${a.on?'on':''}">
       <span class="ach-icon">${a.icon}</span>
       <div class="ach-name">${a.name}</div>
@@ -1271,13 +1355,12 @@ async function doRefresh() {
       renderAll(live);
       toast('✅ Live 2026 results updated!');
     } else {
-      // Still on result day but ECI page not yet up — show waiting state
+      // ECI page not yet published — show dashes, no 2021 data
       showWaitingForResults();
     }
     return;
   }
-  // ── Before result day: show 2021 reference data clearly labelled ──
-  currentData = DATA_2021;
+  // ── Before result day: show 2021 reference data, clearly labelled ──
   setLive(false);
   renderAll(DATA_2021);
 }
@@ -1295,17 +1378,50 @@ function showFetching(on) {
 }
 
 function showWaitingForResults() {
-  // On result day but ECI data not yet available — show a clear waiting state
-  document.getElementById('preBanner').style.display = '';
-  document.getElementById('preBanner').innerHTML = `
-    ⏳ <strong>Counting has begun.</strong> Waiting for ECI to publish results…<br>
-    This page will <strong>auto-refresh every 10 minutes</strong> and update the moment data is live.
+  // On result day but ECI data not yet available — skeleton state, no 2021 data
+  const skl = '<span class="skeleton-pulse">Loading</span>';
+
+  // All numeric/data elements get skeleton shimmer
+  const skelEls = ['wVotes','wMarginStat','svPolled','svElectors','svCands','svStations',
+    'chipElectors','chipStations','chipRounds','chipMargin'];
+  skelEls.forEach(id => { const el=document.getElementById(id); if(el){ el.innerHTML=skl; el.dataset.rv='0'; } });
+
+  // Text fields get plain dashes
+  ['wPct','svTurnout','chipTurnout','dcBig','duelL1','duelL2'].forEach(id => {
+    const el=document.getElementById(id); if(el){ el.textContent='—'; el.dataset.rv='0'; }
+  });
+
+  // Margin number — skeleton at large size
+  const mn = document.getElementById('marginNum');
+  if(mn){ mn.innerHTML='<span class="skeleton-pulse" style="min-width:120px;height:1em">Loading</span>'; mn.dataset.rv='0'; }
+  document.getElementById('winnerName').textContent      = 'Counting in progress…';
+  document.getElementById('winnerYearLbl').textContent   = 'Winner · 2026';
+  document.getElementById('winnerPartyTxt').textContent  = '—';
+  document.getElementById('marginWonBadge').style.display = 'none';
+  document.getElementById('podiumWrap').innerHTML =
+    `<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:32px 0;font-size:13px">
+      ⏳ Waiting for ECI to publish round-wise data…
+    </div>`;
+  document.getElementById('vsListEl').innerHTML =
+    `<div style="color:var(--muted);font-size:12px;padding:12px 0;text-align:center">
+      Vote share data will appear as rounds are counted
+    </div>`;
+  document.getElementById('donutLegend').innerHTML = '';
+  if (donutInst) { donutInst.destroy(); donutInst = null; }
+  if (barInst)   { barInst.destroy();   barInst   = null; }
+  document.getElementById('turnoutFill').style.width = '0%';
+  const banner = document.getElementById('preBanner');
+  banner.style.display = '';
+  banner.className = 'waiting-banner fi';
+  banner.innerHTML = `
+    <span class="waiting-pulse"></span>
+    <strong>Counting Day — 4 May 2026</strong><br>
+    ECI results page not yet published. This dashboard will <strong>auto-refresh every 10 minutes</strong>
+    and populate the moment data is live.<br>
+    <span style="font-size:11px;opacity:0.7">Source: results.eci.gov.in · AC-142 Thiruverumbur</span>
   `;
-  document.getElementById('preBanner').style.background = '#eff6ff';
-  document.getElementById('preBanner').style.borderColor = '#bfdbfe';
-  document.getElementById('preBanner').style.color = '#1d4ed8';
-  document.getElementById('liveLabel').textContent = 'Waiting for ECI…';
-  document.getElementById('liveDot').classList.add('offline');
+  document.getElementById('liveLabel').textContent = 'Counting…';
+  document.getElementById('liveDot').classList.remove('offline');
   toast('⏳ ECI results not yet published — retrying in 10 min');
 }
 
